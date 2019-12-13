@@ -4,6 +4,7 @@
 #include <math.h>
 #include <unordered_map>
 #include <ctime>
+#include <bitset>
 
 #define uint unsigned int
 
@@ -23,21 +24,10 @@ public:
 
 	public:
 
-		reference::~reference();
+		~reference();
 		reference & operator=(Trit val);
 		reference & operator=(const reference & Trit);
-		bool operator!=(Trit val);
-		bool operator!=(const reference & Trit);
-		bool operator==(Trit val);
-		bool operator==(const reference & Trit);
-		Trit operator&(Trit val);
-		Trit operator&(const reference & val);
-		Trit operator|(Trit val);
-		Trit operator|(const reference & val);
-		Trit operator~();
-		Trit get_value();
-		size_t get_pos();
-		Tritset* get_pointer();
+		operator Trit() const;
 
 	private:
 
@@ -50,26 +40,28 @@ public:
 
 	Tritset(size_t size);
 	void set_value(size_t position, Trit value);
-	Trit get_value(size_t pos);
+	Trit get_value(size_t pos) const;
 	size_t capacity() const; // вернуть количество тритов, которых можно поместить по размеру
-	size_t cardinality(Trit value); //вернуть количество F/U/T в тритсете
+	size_t cardinality(Trit value) const; //вернуть количество F/U/T в тритсете
 	void trim(size_t lastIndex); // забыть содержимое от lastIndex и дальше
-	size_t length(); // logical length - индекс последнего не Unknown трита +1
+	size_t length() const; // logical length - индекс последнего не Unknown трита +1
 	size_t size() const; // вернуть количество тритов
-	std::vector<uint> get_array();
 	void print_array();
-	void print_tritset();
+	friend std::ostream & operator<<(std::ostream & out, Tritset & tr);
 	reference operator[](size_t pos);
-	void inverse();
+	Trit operator[](size_t pos) const;
 	void operator&=(Tritset & tr2);
 	void operator|=(Tritset & tr2);
-	void fill_Tritset(Trit value);
-	void fill_Tritset_randomly();
 	void shrink();
 };
 
-bool operator==(Tritset & tr1, Tritset & tr2);
-bool operator!=(Tritset & tr1, Tritset & tr2);
-Tritset operator&(Tritset & tr1, Tritset & tr2);
-Tritset operator|(Tritset & tr1, Tritset & tr2);
-Tritset operator~(Tritset & tr1);
+bool operator==(const Tritset & tr1, const Tritset & tr2);
+bool operator!=(const Tritset & tr1, const Tritset & tr2);
+Tritset operator&(const Tritset & tr1, const Tritset & tr2);
+Tritset operator|(const Tritset & tr1, const Tritset & tr2);
+Tritset operator~(const Tritset & tr1);
+Trit operator&(Trit left, Trit rigth);
+Trit operator|(Trit left, Trit rigth);
+Trit operator~(Trit tr);
+void fill_Tritset(Tritset & tr, Trit value);
+void fill_Tritset_randomly(Tritset & tr);

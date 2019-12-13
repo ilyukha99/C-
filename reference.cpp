@@ -23,60 +23,32 @@ Tritset::reference & Tritset::reference::operator=(const reference & Tritset) {
 	return *this;
 }
 
-bool Tritset::reference::operator!=(Trit val) {
+Trit operator~(Trit tr) {
 
-	if (_value != val)
-		return True;
-	else return False;
-}
-
-bool Tritset::reference::operator!=(const reference & Trit) {
-
-	if (this->_value != Trit._value)
-		return True;
-	else return False;
-}
-
-bool Tritset::reference::operator==(Trit val) {
-
-	if (_value == val)
-		return True;
-	else return False;
-}
-
-bool Tritset::reference::operator==(const reference & Trit) {
-
-	if (this->_value == Trit._value)
-		return True;
-	else return False;
-}
-
-Trit Tritset::reference::operator~() {
-
-	switch (this->_value) {
+	switch (tr) {
 	case True: return False;
 	case False: return True;
 	case Unknown: return Unknown;
 	}
 }
 
-Trit Tritset::reference::operator&(Trit val) {
+Trit operator&(Trit left, Trit rigth) {
 
-	switch (this->_value) {
+	switch (left) {
 	case True:
-		switch (val) {
+		switch (rigth) {
 		case True: return True;
 		case False: return False;
 		case Unknown: return Unknown;
 		}
 	case False:
-		switch (val) {
+		switch (rigth) {
 		case True: return False;
 		case False: return False;
 		case Unknown: return False;
 		}
 	case Unknown:
-		switch (val) {
+		switch (rigth) {
 		case True: return Unknown;
 		case False: return False;
 		case Unknown: return Unknown;
@@ -84,47 +56,23 @@ Trit Tritset::reference::operator&(Trit val) {
 	}
 }
 
-Trit Tritset::reference::operator&(const reference & Trit) {
+Trit operator|(Trit left, Trit rigth) {
 
-	switch (this->_value) {
+	switch (left) {
 	case True:
-		switch (Trit._value) {
-		case True: return True;
-		case False: return False;
-		case Unknown: return Unknown;
-		}
-	case False:
-		switch (Trit._value) {
-		case True: return False;
-		case False: return False;
-		case Unknown: return False;
-		}
-	case Unknown:
-		switch (Trit._value) {
-		case True: return Unknown;
-		case False: return False;
-		case Unknown: return Unknown;
-		}
-	}
-}
-
-Trit Tritset::reference::operator|(Trit val) {
-
-	switch (this->_value) {
-	case True:
-		switch (val) {
+		switch (rigth) {
 		case True: return True;
 		case False: return True;
 		case Unknown: return True;
 		}
 	case False:
-		switch (val) {
+		switch (rigth) {
 		case True: return True;
 		case False: return False;
 		case Unknown: return Unknown;
 		}
 	case Unknown:
-		switch (val) {
+		switch (rigth) {
 		case True: return True;
 		case False: return Unknown;
 		case Unknown: return Unknown;
@@ -132,38 +80,6 @@ Trit Tritset::reference::operator|(Trit val) {
 	}
 }
 
-Trit Tritset::reference::operator|(const reference & Trit) {
-
-	switch (this->_value) {
-	case True:
-		switch (Trit._value) {
-		case True: return True;
-		case False: return True;
-		case Unknown: return True;
-		}
-	case False:
-		switch (Trit._value) {
-		case True: return True;
-		case False: return False;
-		case Unknown: return Unknown;
-		}
-	case Unknown:
-		switch (Trit._value) {
-		case True: return True;
-		case False: return Unknown;
-		case Unknown: return Unknown;
-		}
-	}
-}
-
-Trit Tritset::reference::get_value() {
+Tritset::reference::operator Trit() const {
 	return this->_value;
-}
-
-size_t Tritset::reference::get_pos() {
-	return this->_pos;
-}
-
-Tritset* Tritset::reference::get_pointer() {
-	return this->_PTritset;
 }

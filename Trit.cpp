@@ -8,8 +8,11 @@ Tritset::Tritset(size_t trits_size) {
 	this->_size = trits_size;
 	this->_capacity = (uints_size + 1) * sizeof(uint) * 4;
 
-	for (size_t it = 0; it != this->_capacity; ++it)
+	Trit temp;
+	for (size_t it = 0; it != this->_capacity; ++it) {
 		(*this)[it] = Unknown;
+		temp = (*this)[it];
+	}
 }
 
 void Tritset::print_array() {
@@ -20,31 +23,27 @@ void Tritset::print_array() {
 	std::cout << "\n";
 }
 
-void Tritset::print_tritset() {
+std::ostream & operator<<(std::ostream & out, Tritset & tr) {
 
-	uint cur_uint = 0;
-	unsigned uint_size = sizeof(uint);
-	size_t uints = this->_capacity / 4 / uint_size;
-	bool* binary_decomposition = new bool[uint_size * 8];
-	for (size_t it = 0; it != uints; ++it) {
-		cur_uint = this->_array[it];
-		for (unsigned i = uint_size * 8 - 1; i != -1; --i) {
-			binary_decomposition[i] = cur_uint % 2;
-			cur_uint /= 2;
-		}
-		std::cout << it << ") ";
-		for (unsigned i = 0; i != uint_size * 8; ++i) {
-			std::cout << binary_decomposition[i];
-			if (i % 2 && i != uint_size * 8 - 1)
-				std::cout << "'";
-		}
-		std::cout << "\n";
+	uint counter = 0, size = sizeof(uint) * 4;
+	for (size_t it = 0; it != tr._capacity; ++it) {
+		if (it % size && (tr[it] == False || tr[it] == True))
+			out << "0" << tr[it] << "'";
+		else if (tr[it] == False || tr[it] == True)
+			out << "\n" << counter++ << ") " << "0" << tr[it] << "'";
+		else if (it % size && tr[it] == Unknown)
+			out << "10" << "'";
+		else out << "\n" << counter++ << ") " << "10" << "'";
 	}
-	std::cout << "\n";
+	return out;
 }
 
 Tritset::reference Tritset::operator[](size_t pos) {
 	return reference(this, pos);
+}
+
+Trit Tritset::operator[](size_t pos) const {
+	return this->get_value(pos);
 }
 
 void Tritset::set_value(size_t pos, Trit value) {
@@ -88,11 +87,7 @@ size_t Tritset::capacity() const {
 	return this->_capacity;
 }
 
-std::vector<uint> Tritset::get_array() {
-	return this->_array;
-}
-
-Trit Tritset::get_value(size_t pos) {
+Trit Tritset::get_value(size_t pos) const {
 
 	unsigned uint_size = sizeof(uint);
 	bool* binary_decomposition = new bool[uint_size * 8];
@@ -119,7 +114,7 @@ void Tritset::trim(size_t lastIndex) {
 	_size = lastIndex + 1;
 }
 
-size_t Tritset::length() {
+size_t Tritset::length() const {
 
 	size_t length = 0;
 	for (int it = 0; it != _size; ++it)
@@ -129,7 +124,7 @@ size_t Tritset::length() {
 		return length;
 }
 
-Tritset operator|(Tritset & tr1, Tritset & tr2) {
+Tritset operator|(const Tritset & tr1, const Tritset & tr2) {
 
 	size_t min = (tr1.size() > tr2.size()) ? tr2.size() : tr1.size();
 	size_t max = (tr1.size() < tr2.size()) ? tr2.size() : tr1.size();
@@ -139,7 +134,7 @@ Tritset operator|(Tritset & tr1, Tritset & tr2) {
 	return result;
 }
 
-Tritset operator&(Tritset & tr1, Tritset & tr2) {
+Tritset operator&(const Tritset & tr1, const Tritset & tr2) {
 
 	size_t min = (tr1.size() > tr2.size()) ? tr2.size() : tr1.size();
 	size_t max = (tr1.size() < tr2.size()) ? tr2.size() : tr1.size();
@@ -149,17 +144,16 @@ Tritset operator&(Tritset & tr1, Tritset & tr2) {
 	return result;
 }
 
-void Tritset::fill_Tritset(Trit value) {
+void fill_Tritset(Tritset & tr, Trit value) {
 
-	for (size_t it = 0; it != _size; ++it)
-		(*this)[it] = value;
+	for (size_t it = 0; it != tr.size(); ++it)
+		tr[it] = value;
 }
 
-void Tritset::fill_Tritset_randomly() {
-
-	Trit temp;
-	for (size_t it = 0; it != _size; ++it)
-		(*this)[it] = (Trit)(rand() % 3);
+void fill_Tritset_randomly(Tritset & tr) {
+	
+	for (size_t it = 0; it != tr.size(); ++it)
+		tr[it] = (Trit)(rand() % 3);
 }
 
 void Tritset::operator&=(Tritset & tr2) {
@@ -176,20 +170,15 @@ void Tritset::operator|=(Tritset & tr2) {
 		(*this)[it] = (*this)[it] | tr2[it];
 }
 
-void Tritset::inverse() {
+Tritset operator~(const Tritset & tr1) {
 
-	for (size_t it = 0; it != this->_size; ++it)
-		(*this)[it] = ~(*this)[it];
+	Tritset tr2(tr1.size());
+	for (size_t it = 0; it != tr2.size(); ++it)
+		tr2[it] = ~tr1[it];
+	return tr2;
 }
 
-Tritset operator~(Tritset & tr1) {
-
-	for (size_t it = 0; it != tr1.size(); ++it)
-		tr1[it] = ~tr1[it];
-	return tr1;
-}
-
-size_t Tritset::cardinality(Trit value) {
+size_t Tritset::cardinality(Trit value) const {
 
 	std::unordered_map <Trit, size_t> my_map;
 	for (int it = 0; it != this->_size; ++it) {
@@ -206,17 +195,13 @@ size_t Tritset::cardinality(Trit value) {
 
 void Tritset::shrink() {
 
-	if (this->length() > _size) {
-		_array.resize(this->length());
-		_capacity = this->length();
-	}
-	else {
-		_array.resize(_size);
-		_capacity = _size;
-	}
+	_size = this->length();
+	_array.resize(_size / 4 / sizeof(uint) + 1);
+	_capacity = (_size / 4 / sizeof(uint) + 1) * 4 * sizeof(uint);
+	
 }
 
-bool operator==(Tritset & tr1, Tritset & tr2) {
+bool operator==(const Tritset & tr1, const Tritset & tr2) {
 
 	for (int it = 0; it != tr1.capacity() && it != tr2.capacity(); ++it)
 		if (tr1[it] != tr2[it])
@@ -226,7 +211,7 @@ bool operator==(Tritset & tr1, Tritset & tr2) {
 	return False;
 }
 
-bool operator!=(Tritset & tr1, Tritset & tr2) {
+bool operator!=(const Tritset & tr1, const Tritset & tr2) {
 
 	for (int it = 0; it != tr1.capacity() && it != tr2.capacity(); ++it)
 		if (tr1[it] != tr2[it])
