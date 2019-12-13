@@ -30,6 +30,10 @@ int main() {
 	set2 = ~set2;
 	set2.print_tritset();
 
+	std::cout << (set1 == set2) << "\n";
+	std::cout << (set1 != set2) << "\n";
+	std::cout << (set1 == set1) << "\n";
+
 	system("pause");
 	return 0;
 }

@@ -215,3 +215,23 @@ void Tritset::shrink() {
 		_capacity = _size;
 	}
 }
+
+bool operator==(Tritset & tr1, Tritset & tr2) {
+
+	for (int it = 0; it != tr1.capacity() && it != tr2.capacity(); ++it)
+		if (tr1[it] != tr2[it])
+			return False;
+	if (tr1.size() == tr2.size())
+		return True;
+	return False;
+}
+
+bool operator!=(Tritset & tr1, Tritset & tr2) {
+
+	for (int it = 0; it != tr1.capacity() && it != tr2.capacity(); ++it)
+		if (tr1[it] != tr2[it])
+			return True;
+	if (tr1.size() == tr2.size())
+		return False;
+	return True;
+}

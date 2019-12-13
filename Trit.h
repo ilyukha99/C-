@@ -27,7 +27,9 @@ public:
 		reference & operator=(Trit val);
 		reference & operator=(const reference & Trit);
 		bool operator!=(Trit val);
+		bool operator!=(const reference & Trit);
 		bool operator==(Trit val);
+		bool operator==(const reference & Trit);
 		Trit operator&(Trit val);
 		Trit operator&(const reference & val);
 		Trit operator|(Trit val);
@@ -66,6 +68,8 @@ public:
 	void shrink();
 };
 
+bool operator==(Tritset & tr1, Tritset & tr2);
+bool operator!=(Tritset & tr1, Tritset & tr2);
 Tritset operator&(Tritset & tr1, Tritset & tr2);
 Tritset operator|(Tritset & tr1, Tritset & tr2);
 Tritset operator~(Tritset & tr1);

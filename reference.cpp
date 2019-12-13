@@ -30,9 +30,23 @@ bool Tritset::reference::operator!=(Trit val) {
 	else return False;
 }
 
+bool Tritset::reference::operator!=(const reference & Trit) {
+
+	if (this->_value != Trit._value)
+		return True;
+	else return False;
+}
+
 bool Tritset::reference::operator==(Trit val) {
 
 	if (_value == val)
+		return True;
+	else return False;
+}
+
+bool Tritset::reference::operator==(const reference & Trit) {
+
+	if (this->_value == Trit._value)
 		return True;
 	else return False;
 }
