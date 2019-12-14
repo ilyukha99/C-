@@ -88,7 +88,9 @@ size_t Tritset::capacity() const {
 }
 
 Trit Tritset::get_value(size_t pos) const {
-
+	if (pos > _capacity)
+		return Unknown;
+		
 	unsigned uint_size = sizeof(uint);
 	bool* binary_decomposition = new bool[uint_size * 8];
 	uint cur_uint = this->_array[pos / 4 / uint_size];

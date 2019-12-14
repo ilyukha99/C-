@@ -34,7 +34,6 @@ public:
 		reference(Tritset* PTritset, size_t pos); // construct from tritset reference and position
 		size_t _pos; // position of the trit in Tritset
 		Tritset* _PTritset; // pointer on the Tritset
-		Trit _value; // value of an object
 
 	};
 

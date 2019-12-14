@@ -22,7 +22,6 @@ TEST_CASE("Testing") {
 		REQUIRE(set.get_value(5) == Unknown);
 		set.set_value(5, True);
 		REQUIRE(set.get_value(5) == True);
-		//REQUIRE(set.cardinality(True) == 50);
 	}
 	
 	SECTION("Cardinality") {
@@ -58,12 +57,61 @@ TEST_CASE("Testing") {
 		REQUIRE(set[14] == Trit(set[14]));
 	}
 
-	SECTION("") {
+	SECTION("&=") {
 
+		Tritset setA(50); //U
+		Tritset setB(60); //U
+		setA &= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == Unknown);
+		fill_Tritset(setA, True); // A - True
+		setA &= setB; 
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == Unknown);
+		fill_Tritset(setB, False); //B - False
+		setA &= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == False);
+		fill_Tritset(setB, True); //B - False
+		setA &= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == False);
+		REQUIRE(setA.size() == 50);
 	}
 
-	SECTION("") {
+	SECTION("|=") {
 
+		Tritset setA(50);
+		Tritset setB(60);
+		setA |= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == Unknown);
+		fill_Tritset(setB, False); //B - False
+		setA |= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == Unknown);
+		fill_Tritset(setB, True); //B - True
+		setA |= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == True);
+		fill_Tritset(setB, False); //B - False
+		setA |= setB;
+		for (size_t it = 0; it != setA.size(); ++it)
+			REQUIRE(setA[it] == True);
+		REQUIRE(setA.size() == 50);
 	}
+
+	SECTION("shrink") {
+
+		Tritset set(100);
+		fill_Tritset(set, True);
+		REQUIRE(set.capacity() == 112);
+		set.trim(50);
+		set.shrink();
+		REQUIRE(set.capacity() == 64);
+		for (size_t it = 51; it != set.capacity(); ++it)
+			REQUIRE(set[it] == Unknown);
+	}
+
 	system("pause");
 }
